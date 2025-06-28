@@ -1,0 +1,113 @@
+{
+  "name": "zippycoin-desktop",
+  "version": "1.0.0",
+  "description": "ZippyCoin Desktop Wallet for Windows, macOS, and Linux",
+  "main": "dist/electron/main.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && npm run electron:dev\"",
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "electron:build": "npm run build && electron-builder",
+    "electron:dist": "npm run build && electron-builder --publish=always",
+    "prebuild": "npm run build:electron",
+    "build:electron": "tsc src/electron/main.ts --outDir dist/electron --target es2020 --module commonjs --esModuleInterop --skipLibCheck",
+    "build:windows": "npm run build && electron-builder --windows",
+    "build:macos": "npm run build && electron-builder --macos",
+    "build:linux": "npm run build && electron-builder --linux",
+    "clean": "rm -rf dist build node_modules/.cache"
+  },
+  "build": {
+    "appId": "org.zippyfoundation.wallet",
+    "productName": "ZippyCoin Wallet",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "build/**/*",
+      "dist/electron/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.finance",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "assets/icon.icns",
+      "hardenedRuntime": true,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "category": "Office"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.10",
+    "@reduxjs/toolkit": "^1.9.0",
+    "@types/node": "^20.4.0",
+    "axios": "^1.5.0",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.1.0",
+    "react-router-dom": "^6.14.0",
+    "redux-persist": "^6.0.0",
+    "@zippycoin/shared": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^25.0.0",
+    "electron-builder": "^24.6.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^5.1.0",
+    "wait-on": "^7.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+} 
