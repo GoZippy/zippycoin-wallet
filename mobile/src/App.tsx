@@ -18,6 +18,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import NetInfo from '@react-native-community/netinfo';
+import { Camera } from 'react-native-vision-camera';
 
 // Redux store
 import { store, persistor } from './store';
