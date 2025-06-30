@@ -4,7 +4,7 @@
  */
 
 import CryptoJS from 'crypto-js';
-import { ed25519 } from '@noble/ed25519';
+import ed25519 from '@noble/ed25519';
 import { sha256 } from '@noble/hashes/sha256';
 import { randomBytes } from '@noble/hashes/utils';
 
