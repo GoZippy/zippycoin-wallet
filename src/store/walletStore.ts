@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Decimal } from 'decimal.js';
+import { ZippyCoinWallet, type WalletAccount as CryptoAccount } from '../crypto/wallet';
+import { mockTransactions, mockTrustScoreData, generateMockTransaction } from '../utils/mockData';
 
 interface Transaction {
   id: string;
@@ -83,35 +85,89 @@ export const useWalletStore = create<WalletStore>()(
       },
 
       createWallet: async (name: string) => {
-        // Generate mnemonic and create account
-        const mnemonic = generateMnemonic();
+        try {
+          // Generate wallet using crypto library
+          const { wallet, mnemonic } = await ZippyCoinWallet.generateNew(name);
+          const cryptoAccount = wallet.deriveAccount(0);
+          
+          const account: Account = {
+            id: `account-${Date.now()}`,
+            name: name || 'Account 1',
+            address: cryptoAccount.address,
+            balance: '0.0000',
+            trustScore: {
+              current: 500,
+              trend: 'stable',
+              factors: {
+                transactionHistory: 0,
+                networkParticipation: 50,
+                identityVerification: 0
+              }
+            }
+          };
+
+          // Store wallet exists flag
+          localStorage.setItem('zippycoin-wallet-exists', 'true');
+          localStorage.setItem('zippycoin-wallet-mnemonic', mnemonic);
+          
+          set({
+            hasWallet: true,
+            isLocked: false,
+            currentAccount: account,
+            accounts: [account],
+            transactions: mockTransactions.slice(0, 3) // Add some demo transactions
+          });
+
+          return { mnemonic, account };
+        } catch (error) {
+          console.error('Failed to create wallet:', error);
+          throw error;
+        }
+      },
+
+      importWallet: async (mnemonic: string, name: string) => {
+        try {
+          // Validate and import from mnemonic using crypto library
+          const wallet = await ZippyCoinWallet.fromMnemonic(mnemonic, {
+            network: 'testnet',
+            derivationPath: "m/44'/2187'/0'",
+            coinType: 2187
+          });
+          
+          const cryptoAccount = wallet.deriveAccount(0);
+          
         const account: Account = {
           id: `account-${Date.now()}`,
-          name: name || 'Account 1',
-          address: generateAddress(),
-          balance: '0.0000',
+          name: name || 'Imported Account',
+          address: cryptoAccount.address,
+          balance: '1234.5678', // Mock existing balance
           trustScore: {
-            current: 500,
-            trend: 'stable',
+            current: 750,
+            trend: 'increasing',
             factors: {
-              transactionHistory: 0,
-              networkParticipation: 50,
-              identityVerification: 0
+              transactionHistory: 95,
+              networkParticipation: 78,
+              identityVerification: 85
             }
           }
         };
 
-        // Store wallet exists flag
         localStorage.setItem('zippycoin-wallet-exists', 'true');
+        localStorage.setItem('zippycoin-wallet-mnemonic', mnemonic);
         
         set({
           hasWallet: true,
           isLocked: false,
           currentAccount: account,
-          accounts: [account]
+          accounts: [account],
+          transactions: mockTransactions // Add full transaction history for imported wallet
         });
 
-        return { mnemonic, account };
+        return account;
+        } catch (error) {
+          console.error('Failed to import wallet:', error);
+          throw error;
+        }
       },
 
       importWallet: async (mnemonic: string, name: string) => {
@@ -211,6 +267,20 @@ export const useWalletStore = create<WalletStore>()(
       sendTransaction: async (to: string, amount: string, memo?: string) => {
         const { currentAccount, addTransaction } = get();
         if (!currentAccount) throw new Error('No account selected');
+        
+        // Validate address format
+        if (!ZippyCoinWallet.validateAddress(to)) {
+          throw new Error('Invalid recipient address');
+        }
+        
+        // Validate amount
+        const sendAmount = new Decimal(amount);
+        const balance = new Decimal(currentAccount.balance);
+        const fee = new Decimal('0.001');
+        
+        if (sendAmount.plus(fee).gt(balance)) {
+          throw new Error('Insufficient balance');
+        }
 
         const transaction: Transaction = {
           id: `tx-${Date.now()}`,
@@ -223,6 +293,11 @@ export const useWalletStore = create<WalletStore>()(
         };
 
         addTransaction(transaction);
+
+        // Update balance
+        const newBalance = balance.minus(sendAmount).minus(fee);
+        const { updateBalance } = get();
+        updateBalance(currentAccount.id, newBalance.toString());
 
         // Simulate transaction processing
         setTimeout(() => {
@@ -265,28 +340,4 @@ export const useWalletStore = create<WalletStore>()(
 );
 
 // Helper functions
-function generateMnemonic(): string {
-  const words = [
-    'abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract',
-    'absurd', 'abuse', 'access', 'accident', 'account', 'accuse', 'achieve', 'acid',
-    'acoustic', 'acquire', 'across', 'act', 'action', 'actor', 'actress', 'actual'
-  ];
-  
-  return Array.from({ length: 24 }, () => 
-    words[Math.floor(Math.random() * words.length)]
-  ).join(' ');
-}
-
-function generateAddress(): string {
-  const chars = '0123456789abcdef';
-  const randomPart = Array.from({ length: 39 }, () => 
-    chars[Math.floor(Math.random() * chars.length)]
-  ).join('');
-  
-  return `zpc1${randomPart}`;
-}
-
-function validateMnemonic(mnemonic: string): boolean {
-  const words = mnemonic.trim().split(/\s+/);
-  return words.length >= 12 && words.length <= 24;
-}
+// Moved to crypto/wallet.ts

@@ -17,11 +17,13 @@ const CreateWalletPage: React.FC = () => {
   const [verification, setVerification] = useState<number[]>([]);
   const [verificationWords, setVerificationWords] = useState<string[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const handleCreateWallet = async () => {
     if (!walletName.trim()) return;
     
     setIsCreating(true);
+    setError('');
     try {
       const { mnemonic: generatedMnemonic } = await createWallet(walletName);
       setMnemonic(generatedMnemonic);
@@ -37,6 +39,7 @@ const CreateWalletPage: React.FC = () => {
       setVerificationWords(new Array(4).fill(''));
     } catch (error) {
       console.error('Failed to create wallet:', error);
+      setError(error instanceof Error ? error.message : 'Failed to create wallet');
     } finally {
       setIsCreating(false);
     }
@@ -105,6 +108,12 @@ const CreateWalletPage: React.FC = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
+      
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 text-sm">{error}</p>
+        </div>
+      )}
 
       <Button
         variant="primary"
