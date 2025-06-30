@@ -70,6 +70,9 @@ export const useWalletStore = create<WalletStore>()(
       priceChange24h: 3.45,
 
       initializeWallet: async () => {
+        // Simulate initialization delay for demo
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
         // Check if wallet exists in secure storage
         const existingWallet = localStorage.getItem('zippycoin-wallet-exists');
         set({
