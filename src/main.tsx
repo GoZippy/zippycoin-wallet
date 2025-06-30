@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './styles/globals.css'
-import { utils } from '@noble/hashes'
+import { utils } from '@noble/hashes/utils'
 
 // Configure @noble/hashes to use browser's Web Crypto API
 utils.setBackend(crypto)
