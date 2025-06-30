@@ -4,7 +4,7 @@
  */
 
 import CryptoJS from 'crypto-js';
-import ed25519 from '@noble/ed25519';
+import { getPublicKey, sign } from '@noble/ed25519';
 import { sha256 } from '@noble/hashes/sha256';
 import { randomBytes } from '@noble/hashes/utils';
 
@@ -96,7 +96,7 @@ export class ZippyCoinWallet {
 
     // Generate key pair
     const privateKey = accountSeed.slice(0, 32);
-    const publicKey = ed25519.getPublicKey(privateKey);
+    const publicKey = getPublicKey(privateKey);
     
     // Generate ZippyCoin address from public key
     const address = this.generateAddress(publicKey);
@@ -143,7 +143,7 @@ export class ZippyCoinWallet {
     accountSeed[0] = accountIndex;
 
     const privateKey = accountSeed.slice(0, 32);
-    const signature = await ed25519.sign(transactionData, privateKey);
+    const signature = await sign(transactionData, privateKey);
     
     return {
       signature: Buffer.from(signature).toString('hex'),
