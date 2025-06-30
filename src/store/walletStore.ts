@@ -170,40 +170,6 @@ export const useWalletStore = create<WalletStore>()(
         }
       },
 
-      importWallet: async (mnemonic: string, name: string) => {
-        // Validate and import from mnemonic
-        if (!validateMnemonic(mnemonic)) {
-          throw new Error('Invalid mnemonic phrase');
-        }
-
-        const account: Account = {
-          id: `account-${Date.now()}`,
-          name: name || 'Imported Account',
-          address: generateAddress(),
-          balance: '1234.5678', // Mock existing balance
-          trustScore: {
-            current: 750,
-            trend: 'increasing',
-            factors: {
-              transactionHistory: 95,
-              networkParticipation: 78,
-              identityVerification: 85
-            }
-          }
-        };
-
-        localStorage.setItem('zippycoin-wallet-exists', 'true');
-        
-        set({
-          hasWallet: true,
-          isLocked: false,
-          currentAccount: account,
-          accounts: [account]
-        });
-
-        return account;
-      },
-
       unlockWallet: async (password: string) => {
         // Mock password validation
         if (password === 'demo' || password.length >= 6) {
