@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { Decimal } from 'decimal.js';
 
 interface Transaction {
   id: string;

@@ -14,12 +14,11 @@ export const Card: React.FC<CardProps> = ({
   hover = false,
   onClick,
 }) => {
-
   const MotionCard = motion.div;
 
   return (
     <MotionCard
-      className={`card ${hoverClasses} ${className}`}
+      className={`card ${className}`}
       onClick={onClick}
       whileHover={hover ? { scale: 1.02, y: -4 } : undefined}
       transition={{ duration: 0.2 }}

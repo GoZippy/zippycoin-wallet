@@ -4,6 +4,7 @@ import { ArrowLeft, QrCode, Send, AlertCircle, CheckCircle } from 'lucide-react'
 import { Decimal } from 'decimal.js';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { useWalletStore } from '../store/walletStore';
 
 const SendPage: React.FC = () => {
   const navigate = useNavigate();

@@ -4,6 +4,7 @@ import { ArrowLeft, Copy, QrCode, Share, Download } from 'lucide-react';
 import QRCodeGenerator from 'qrcode';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { useWalletStore } from '../store/walletStore';
 
 const ReceivePage: React.FC = () => {
   const navigate = useNavigate();
