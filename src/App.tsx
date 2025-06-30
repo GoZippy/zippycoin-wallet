@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import WelcomePage from './pages/WelcomePage';
 import CreateWalletPage from './pages/CreateWalletPage';
 import SendPage from './pages/SendPage';
@@ -12,11 +13,17 @@ import './styles/globals.css';
 const LoadingScreen: React.FC = () => (
   <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
     <div className="text-center">
-      <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"
+      />
       <p className="text-gray-600 dark:text-gray-300">Loading ZippyCoin Wallet...</p>
     </div>
   </div>
 );
+
+// Loading component
 
 function App() {
   const { 

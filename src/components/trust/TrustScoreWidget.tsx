@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Shield, TrendingUp, Users } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';

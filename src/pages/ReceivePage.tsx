@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, QrCode, Share, Download } from 'lucide-react';
+import QRCodeGenerator from 'qrcode';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { useWalletStore } from '../store/walletStore';
-import QRCodeGenerator from 'qrcode';
 
 const ReceivePage: React.FC = () => {
   const navigate = useNavigate();

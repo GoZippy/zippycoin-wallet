@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
@@ -37,7 +38,9 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       onClick={onClick}
       disabled={disabled || loading}
@@ -47,6 +50,6 @@ export const Button: React.FC<ButtonProps> = ({
       )}
       {icon && !loading && icon}
       {children}
-    </button>
+    </motion.button>
   );
 };

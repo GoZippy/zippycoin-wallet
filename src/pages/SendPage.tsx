@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, QrCode, Send, AlertCircle, CheckCircle } from 'lucide-react';
+import { Decimal } from 'decimal.js';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { useWalletStore } from '../store/walletStore';
-import { Decimal } from 'decimal.js';
 
 const SendPage: React.FC = () => {
   const navigate = useNavigate();
