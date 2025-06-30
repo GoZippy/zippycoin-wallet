@@ -65,8 +65,7 @@
     "lucide-react": "^0.263.0",
     "decimal.js": "^10.4.3",
     "zustand": "^4.4.0",
-    "framer-motion": "^10.16.0",
-    "recharts": "^2.7.0",
+    "clsx": "^2.0.0",
     "qrcode": "^1.5.3"
   },
   "devDependencies": {

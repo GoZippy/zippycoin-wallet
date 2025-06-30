@@ -2,22 +2,17 @@ import React from 'react';
 import { Shield, Key, Lock, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { useNavigate } from 'react-router-dom';
 
-interface WelcomePageProps {
-  onWalletCreated: () => void;
-}
+const WelcomePage: React.FC = () => {
+  const navigate = useNavigate();
 
-const WelcomePage: React.FC<WelcomePageProps> = ({ onWalletCreated }) => {
   const handleCreateWallet = () => {
-    // TODO: Navigate to create wallet flow
-    console.log('Creating wallet...');
-    onWalletCreated();
+    navigate('/create');
   };
 
   const handleImportWallet = () => {
-    // TODO: Navigate to import wallet flow
-    console.log('Importing wallet...');
-    onWalletCreated();
+    navigate('/create'); // TODO: Add import flow
   };
 
   return (
