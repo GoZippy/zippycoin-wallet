@@ -66,7 +66,8 @@
     "decimal.js": "^10.4.3",
     "zustand": "^4.4.0",
     "clsx": "^2.0.0",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "framer-motion": "^10.16.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
