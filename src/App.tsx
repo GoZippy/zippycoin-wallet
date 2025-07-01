@@ -2,12 +2,18 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
+import { ToastContainer } from './components/ui/Toast';
+import Navigation from './components/layout/Navigation';
 import WelcomePage from './pages/WelcomePage';
 import CreateWalletPage from './pages/CreateWalletPage';
 import SendPage from './pages/SendPage';
 import ReceivePage from './pages/ReceivePage';
 import DashboardPage from './pages/DashboardPage';
+import AssetsPage from './pages/AssetsPage';
+import TrustPage from './pages/TrustPage';
+import DeFiPage from './pages/DeFiPage';
 import { useWalletStore } from './store/walletStore';
+import { useToast } from './hooks/useToast';
 import './styles/globals.css';
 
 // Loading component
@@ -24,8 +30,6 @@ const LoadingScreen: React.FC = () => (
   </div>
 );
 
-// Loading component
-
 function App() {
   const { 
     isInitialized, 
@@ -33,10 +37,22 @@ function App() {
     isLocked, 
     initializeWallet 
   } = useWalletStore();
+  
+  const { toasts, removeToast } = useToast();
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
 
   React.useEffect(() => {
     initializeWallet();
   }, [initializeWallet]);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Show loading screen while initializing
   if (!isInitialized) {
@@ -46,7 +62,13 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
-        <div className="App">
+        <div className="App relative">
+          {/* Navigation - only show when wallet exists and is unlocked */}
+          {hasWallet && !isLocked && <Navigation isMobile={isMobile} />}
+          
+          {/* Toast Container */}
+          <ToastContainer toasts={toasts} onClose={removeToast} />
+          
           <Routes>
             {!hasWallet ? (
               // No wallet exists - show onboarding flow
@@ -83,6 +105,9 @@ function App() {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/send" element={<SendPage />} />
                 <Route path="/receive" element={<ReceivePage />} />
+                <Route path="/assets" element={<AssetsPage />} />
+                <Route path="/trust" element={<TrustPage />} />
+                <Route path="/defi" element={<DeFiPage />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </>
             )}
