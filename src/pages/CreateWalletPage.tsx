@@ -66,20 +66,32 @@ const CreateWalletPage: React.FC = () => {
   };
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-center mb-8">
-      {[1, 2, 3, 4].map((num) => (
-        <div key={num} className="flex items-center">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+    <div className="flex items-center justify-center mb-12">
+      {[
+        { num: 1, label: 'Create' },
+        { num: 2, label: 'Save Phrase' },
+        { num: 3, label: 'Verify' },
+        { num: 4, label: 'Complete' }
+      ].map(({ num, label }) => (
+        <div key={num} className="flex flex-col items-center">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
             step >= num 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-gray-200 text-gray-600'
+              ? 'bg-blue-500 text-white shadow-lg' 
+              : 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
           }`}>
-            {step > num ? <CheckCircle className="w-4 h-4" /> : num}
+            {step > num ? <CheckCircle className="w-5 h-5" /> : num}
           </div>
+          <span className={`mt-2 text-xs font-medium transition-colors duration-300 ${
+            step >= num 
+              ? 'text-blue-600 dark:text-blue-400' 
+              : 'text-gray-500 dark:text-gray-400'
+          }`}>
+            {label}
+          </span>
           {num < 4 && (
-            <div className={`w-12 h-1 ${
+            <div className={`absolute w-16 h-1 mt-5 ml-16 ${
               step > num ? 'bg-blue-500' : 'bg-gray-200'
-            }`} />
+            } transition-colors duration-300`} />
           )}
         </div>
       ))}
