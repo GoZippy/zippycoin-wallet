@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   define: {
     global: 'globalThis',
+    'process.versions.node': 'undefined',
   },
   resolve: {
     alias: {
